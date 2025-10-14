@@ -5,12 +5,15 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class UserDeletedEvent {
-    private final String eventId;
-    private final LocalDateTime eventTimestamp;
-    private final Long id;
-    private final String email;
+    private String eventId;
+    private LocalDateTime eventTimestamp;
+    private Long id;
+    private String email;
 
-    private UserDeletedEvent(Long id, String email, String reason) {
+    public UserDeletedEvent() {
+    }
+
+    private UserDeletedEvent(Long id, String email) {
         this.eventId = UUID.randomUUID().toString();
         this.eventTimestamp = LocalDateTime.now();
         this.id = id;
@@ -22,6 +25,11 @@ public class UserDeletedEvent {
     public Long getId() { return id; }
     public String getEmail() { return email; }
 
+    public void setEventId(String eventId) { this.eventId = eventId; }
+    public void setEventTimestamp(LocalDateTime eventTimestamp) { this.eventTimestamp = eventTimestamp; }
+    public void setId(Long id) { this.id = id; }
+    public void setEmail(String email) { this.email = email; }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -29,7 +37,6 @@ public class UserDeletedEvent {
     public static class Builder {
         private Long id;
         private String email;
-        private String reason;
 
         public Builder id(Long id) {
             this.id = id;
@@ -41,13 +48,8 @@ public class UserDeletedEvent {
             return this;
         }
 
-        public Builder reason(String reason) {
-            this.reason = reason;
-            return this;
-        }
-
         public UserDeletedEvent build() {
-            return new UserDeletedEvent(id, email, reason);
+            return new UserDeletedEvent(id, email);
         }
     }
 

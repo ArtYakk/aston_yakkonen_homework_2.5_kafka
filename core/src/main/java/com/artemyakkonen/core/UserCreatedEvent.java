@@ -5,13 +5,16 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class UserCreatedEvent {
-    private final String eventId;
-    private final LocalDateTime eventTimestamp;
-    private final Long id;
-    private final String name;
-    private final String email;
-    private final Integer age;
-    private final LocalDateTime createdAt;
+    private String eventId;
+    private LocalDateTime eventTimestamp;
+    private Long id;
+    private String name;
+    private String email;
+    private Integer age;
+    private LocalDateTime createdAt;
+
+    public UserCreatedEvent() {
+    }
 
     private UserCreatedEvent(Long id, String name, String email, Integer age, LocalDateTime createdAt) {
         this.eventId = UUID.randomUUID().toString();
@@ -30,6 +33,14 @@ public class UserCreatedEvent {
     public String getEmail() { return email; }
     public Integer getAge() { return age; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+
+    public void setEventId(String eventId) { this.eventId = eventId; }
+    public void setEventTimestamp(LocalDateTime eventTimestamp) { this.eventTimestamp = eventTimestamp; }
+    public void setId(Long id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setEmail(String email) { this.email = email; }
+    public void setAge(Integer age) { this.age = age; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     public static Builder builder() {
         return new Builder();

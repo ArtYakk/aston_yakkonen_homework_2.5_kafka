@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@KafkaListener(topics = {"user-created-events-topic", "user-deleted-events-topic"})
+@KafkaListener(topics = {"user-created-events-topic", "user-deleted-events-topic"}, groupId = "user-events")
 public class UserEventsHandler {
 
     @KafkaHandler
@@ -24,7 +24,6 @@ public class UserEventsHandler {
                     userCreatedEvent.getName(),
                     userCreatedEvent.getEmail());
 
-            Thread.sleep(1000);
 
             log.info("Email notification of user {} creation to {} successfully sent",
                     userCreatedEvent.getName(),
@@ -47,7 +46,6 @@ public class UserEventsHandler {
                     userDeletedEvent.getEmail(),
                     userDeletedEvent.getId());
 
-            Thread.sleep(1000);
 
             log.info("Email notification to {} of deleting user with id={} successfully sent",
                     userDeletedEvent.getEmail(),

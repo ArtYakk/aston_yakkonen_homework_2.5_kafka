@@ -22,10 +22,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -36,6 +39,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("UserService Unit Tests")
 class UserServiceTest {
+    @Mock
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
     @Mock
     private UserRepository userRepository;
@@ -120,6 +125,11 @@ class UserServiceTest {
     @Test
     @DisplayName("Should create new user")
     void shouldCreateUser() {
+        CompletableFuture<SendResult<String, Object>> successFuture =
+                CompletableFuture.completedFuture(mock(SendResult.class));
+
+        when(kafkaTemplate.send(anyString(), anyString(), any())).thenReturn(successFuture);
+
         when(userMapper.map(testUserCreateDTO)).thenReturn(testUser);
         when(userRepository.save(testUser)).thenReturn(testUser);
         when(userMapper.map(testUser)).thenReturn(testUserDTO);
@@ -138,25 +148,31 @@ class UserServiceTest {
     @Test
     @DisplayName("Should delete user")
     void shouldDeleteUser() {
-        when(userRepository.existsById(1L)).thenReturn(true);
+        CompletableFuture<SendResult<String, Object>> successFuture =
+                CompletableFuture.completedFuture(mock(SendResult.class));
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        when(kafkaTemplate.send(anyString(), anyString(), any())).thenReturn(successFuture);
 
         userService.deleteUser(1L);
 
-        verify(userRepository).existsById(1L);
+        verify(userRepository).findById(1L);
         verify(userRepository).deleteById(1L);
+        verify(kafkaTemplate).send(eq("user-deleted-events-topic"), eq("1"), any());
     }
 
     @Test
     @DisplayName("Should throw exception when user not found when deleting")
     void shouldThrowExceptionWhenDeletingNonExistentUser() {
-        when(userRepository.existsById(999L)).thenReturn(false);
+        when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.deleteUser(999L))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessage("User with id 999 not found");
 
-        verify(userRepository).existsById(999L);
+        verify(userRepository).findById(999L);
         verify(userRepository, never()).deleteById(anyLong());
+        verify(kafkaTemplate, never()).send(anyString(), anyString(), any());
     }
 
     @Test

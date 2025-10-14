@@ -4,3 +4,6 @@
 /volumes/server-2/
 /volumes/server-3/
 /volumes/postgres_data/
+/core/target/
+/EmailNotificationMicroservice/target/
+/UserService/target/

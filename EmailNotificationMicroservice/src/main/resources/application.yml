@@ -1,20 +1,21 @@
-
 spring:
   application:
     name: EmailNotificationMicroservice
-
   kafka:
     consumer:
       bootstrap-servers: localhost:9092,localhost:9094
+#      group-id: user-events
       properties:
-        spring.json.trusted.packages: "com.artemyakkonen.core"
-      group-id: user-events-group
+        spring:
+          json:
+            trusted:
+              packages: "com.artemyakkonen.core"
 
 server:
-  port: 0
+  port: 8090
 
 logging:
   level:
     root: info
-#    org.springframework.kafka: warn
+    org.springframework.kafka: DEBUG
 #    com.artemyakkonen: debug

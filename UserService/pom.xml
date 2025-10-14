@@ -11,8 +11,8 @@
     <groupId>com.artemyakkonen</groupId>
     <artifactId>UserService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>aston_yakkonen_homework_2.4</name>
-    <description>aston_yakkonen_homework_2.4</description>
+    <name>UserService</name>
+    <description>UserService</description>
     <url/>
     <licenses>
         <license/>
