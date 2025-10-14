@@ -1,4 +1,16 @@
 services:
+  postgres:
+    image: postgres:17
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./volumes/postgres_data:/var/lib/postgresql/data
+
   kafka-1:
     image: apache/kafka:4.0.1
     ports:
@@ -13,6 +25,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+    volumes:
+      - ./volumes/server-1:/tmp/kafka-logs
 
   kafka-2:
     image: apache/kafka:4.0.1
@@ -28,6 +42,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+    volumes:
+      - ./volumes/server-2:/tmp/kafka-logs
 
   kafka-3:
     image: apache/kafka:4.0.1
@@ -43,3 +59,5 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+    volumes:
+      - ./volumes/server-3:/tmp/kafka-logs
