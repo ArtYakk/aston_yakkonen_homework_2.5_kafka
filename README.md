@@ -15,10 +15,12 @@
   МОДУЛИ:
   
 core:
+
   Данный модуль представляет из себя библиотку с kafka-ивентами, 
 подключается через maven dependency к остальным модулям.
 
 UserService:
+
   Spring Boot микросервис с REST API, которое позволяет управлять данными. 
 Используемые модули: spring(boot, web, data etc). 
 Реализован api для получения, создания, обновления и удаления юзера. Использован dto с библиотекой MapStruct. 
@@ -28,7 +30,8 @@ UserService:
   Интегрирован kafka producer, который отправляет сообщения в kafka при создании или удалении пользователей. Также есть REST API для отправления сообщений в kafka.
 Написано 2 интеграционных теста отправки сообщений в kafka: UserCreateEvent, UserDeleteEvent.  
 
-EmailNotificationService;
+EmailNotificationService:
+
   Spring Boot микросервис, который содержит kafka-consumer, принимает сообщения из топиков
 user-created-topic, user-deleted-topic и имитирует отправление нотификаций на почту и информацией
 о данных событиях. Также предусмотрена отправка сообщений в dlt топики при ошибках.
