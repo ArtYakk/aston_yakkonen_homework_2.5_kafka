@@ -17,5 +17,5 @@ server:
 logging:
   level:
     root: info
-    org.springframework.kafka: DEBUG
+#    org.springframework.kafka: DEBUG
 #    com.artemyakkonen: debug
