@@ -44,6 +44,9 @@ user-created-topic, user-deleted-topic и имитирует отправлен�
   ВЕРСИИ:
   
 Java: 21  
+
 Spring Boot: 3.5.6
+
 PostgreSQL: 17
+
 Kafka: 4.0.1
