@@ -87,21 +87,4 @@ public class KafkaConfig {
                 .build();
     }
 
-//    @Bean
-//    public NewTopic userCreatedTopicDLT() {
-//        return TopicBuilder.name("user-created-events-topic-dlt")
-//                .partitions(3)
-//                .replicas(3)
-//                .configs(Map.of("min.insync.replicas", "2"))
-//                .build();
-//    }
-//
-//    @Bean
-//    public NewTopic userDeletedTopicDLT() {
-//        return TopicBuilder.name("user-deleted-events-topic-dlt")
-//                .partitions(3)
-//                .replicas(3)
-//                .configs(Map.of("min.insync.replicas", "2"))
-//                .build();
-//    }
 }
