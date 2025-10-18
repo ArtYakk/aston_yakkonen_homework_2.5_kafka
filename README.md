@@ -34,6 +34,7 @@ UserService:
 также: частичное обновление, пагинация + сортировка, поиск с JpaSpecification, GlobalExceptionHandler, логирование, валидация, swagger документация.
   Интегрирован kafka producer, который отправляет сообщения в kafka при создании или удалении пользователей. Также есть REST API для отправления сообщений в kafka.
 Написано 2 интеграционных теста отправки сообщений в kafka: UserCreateEvent, UserDeleteEvent.  
+  Добавлена поддержка Spring HATEOAS для UserController
 
 EmailNotificationService:
 
