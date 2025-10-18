@@ -4,6 +4,7 @@ import com.artemyakkonen.aston_spring_boot.dto.UserCreateDTO;
 import com.artemyakkonen.aston_spring_boot.dto.UserDTO;
 import com.artemyakkonen.aston_spring_boot.dto.UserParamsDTO;
 import com.artemyakkonen.aston_spring_boot.dto.UserUpdateDTO;
+import com.artemyakkonen.aston_spring_boot.hateoas.UserDTOModelAssembler;
 import com.artemyakkonen.aston_spring_boot.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,10 +16,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @Tag(name = "User management", description = "API for managing users")
@@ -29,6 +35,7 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    private final UserDTOModelAssembler userDTOModelAssembler;
 
     @Operation(
             summary = "Get user by ID",
@@ -49,11 +56,12 @@ public class UserController {
     })
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    UserDTO getUser(
+    public EntityModel<UserDTO> getUser(
             @Parameter(description = "User ID", example = "1", required = true)
             @PathVariable Long id){
         log.info("GET /api/users/{}", id);
-        return userService.findUser(id);
+        var userDTO = userService.findUser(id);
+        return userDTOModelAssembler.toModel(userDTO);
     }
 
     @Operation(
@@ -87,10 +95,11 @@ public class UserController {
     })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<UserDTO> getAllUses(@Parameter(description = "Search and pagination parameters")
+    public CollectionModel<EntityModel<UserDTO>> getAllUses(@Parameter(description = "Search and pagination parameters")
                              @Valid UserParamsDTO params){
         log.info("GET /api/users");
-        return userService.findAllUsers(params);
+        var userDTOs = userService.findAllUsers(params);
+        return CollectionModel.of(userDTOs.stream().map(userDTOModelAssembler::toModel).toList());
     }
 
     @Operation(summary = "Create new user", description = "Creates a new user in the db")
@@ -102,10 +111,11 @@ public class UserController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    UserDTO createUser(@Parameter(description = "User data for creation", required = true)
+    EntityModel<UserDTO> createUser(@Parameter(description = "User data for creation", required = true)
                        @RequestBody @Valid UserCreateDTO dto){
         log.info("POST /api/users");
-        return userService.createUser(dto);
+        var userDTO = userService.createUser(dto);
+        return userDTOModelAssembler.toModel(userDTO);
     }
 
     @Operation(summary = "Delete user", description = "Deletes a user by their ID")
@@ -130,12 +140,13 @@ public class UserController {
     })
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    UserDTO updateUser(@Parameter(description = "User data for update", required = true)
+    EntityModel<UserDTO> updateUser(@Parameter(description = "User data for update", required = true)
                        @RequestBody @Valid UserUpdateDTO dto,
                        @Parameter(description = "User ID to update", example = "1")
                        @PathVariable Long id){
         log.info("PUT /api/users/{}", id);
-        return userService.updateUser(id, dto);
+        var userDTO = userService.updateUser(id, dto);
+        return userDTOModelAssembler.toModel(userDTO);
     }
 
 }

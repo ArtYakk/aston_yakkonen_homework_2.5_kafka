@@ -19,6 +19,7 @@ public class EmailServiceImpl implements EmailService{
             throw new UserNotFoundException(String.format("User with email %s not found", email));
         }
 
+
         log.info("Message to {} successfully sent", email);
     }
 }

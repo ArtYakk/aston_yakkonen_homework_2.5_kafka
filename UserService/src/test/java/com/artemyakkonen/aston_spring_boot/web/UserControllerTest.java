@@ -5,6 +5,7 @@ import com.artemyakkonen.aston_spring_boot.dto.UserDTO;
 import com.artemyakkonen.aston_spring_boot.dto.UserUpdateDTO;
 import com.artemyakkonen.aston_spring_boot.model.User;
 import com.artemyakkonen.aston_spring_boot.repository.UserRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
@@ -113,11 +115,15 @@ class UserControllerTest {
                         .content(om.writeValueAsString(userCreateDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/hal+json"))
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
-        UserDTO responseUser = om.readValue(body, UserDTO.class);
+
+        var collectionModel =
+                om.readValue(body, new TypeReference<EntityModel<UserDTO>>() {});
+
+        UserDTO responseUser = collectionModel.getContent();
 
         assertThat(responseUser.getId()).isNotNull();
         assertThat(responseUser.getName()).isEqualTo("Zaur");
@@ -132,11 +138,15 @@ class UserControllerTest {
         var result = mockMvc.perform(get("/api/users/{id}", testUser.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/hal+json"))
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
-        UserDTO responseUser = om.readValue(body, UserDTO.class);
+
+        var collectionModel =
+                om.readValue(body, new TypeReference<EntityModel<UserDTO>>() {});
+
+        UserDTO responseUser = collectionModel.getContent();
 
         assertThat(responseUser.getId()).isEqualTo(testUser.getId());
         assertThat(responseUser.getName()).isEqualTo("Artem");
@@ -156,11 +166,15 @@ class UserControllerTest {
                         .content(om.writeValueAsString(userUpdateDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/hal+json"))
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
-        UserDTO responseUser = om.readValue(body, UserDTO.class);
+
+        var collectionModel =
+                om.readValue(body, new TypeReference<EntityModel<UserDTO>>() {});
+
+        UserDTO responseUser = collectionModel.getContent();
 
         assertThat(responseUser.getId()).isEqualTo(testUser.getId());
         assertThat(responseUser.getName()).isEqualTo("ArtemUpdated");
@@ -192,14 +206,19 @@ class UserControllerTest {
                         .param("sortDirection", "asc")
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/hal+json"))
                 .andReturn();
 
         var body = result.getResponse().getContentAsString();
-        UserDTO[] responseUsers = om.readValue(body, UserDTO[].class);
 
-        assertThat(responseUsers.length).isEqualTo(2);
+        var jsonNode = om.readTree(body);
+        var usersArray = jsonNode.get("_embedded").get("userDTOList");
+        UserDTO[] responseUsers = om.convertValue(usersArray, UserDTO[].class);
+
+        assertThat(responseUsers).hasSize(2);
         assertThat(responseUsers[0].getId()).isEqualTo(testUser.getId());
+        assertThat(responseUsers[0].getName()).isEqualTo("Artem");
+        assertThat(responseUsers[1].getName()).isEqualTo("Nail");
     }
 
 }

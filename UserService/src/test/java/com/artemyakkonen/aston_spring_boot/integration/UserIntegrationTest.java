@@ -182,23 +182,23 @@ class UserIntegrationTest {
                         .param("sortDirection", "asc")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$._embedded.userDTOList").isArray())
+                .andExpect(jsonPath("$._embedded.userDTOList.length()").value(2));
 
         mockMvc.perform(get("/api/users")
                         .param("name", "john doe")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].name").value("John Doe"));
+                .andExpect(jsonPath("$._embedded.userDTOList").isArray())
+                .andExpect(jsonPath("$._embedded.userDTOList.length()").value(1))
+                .andExpect(jsonPath("$._embedded.userDTOList[0].name").value("John Doe"));
 
         mockMvc.perform(get("/api/users")
                         .param("ageGt", "26")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$._embedded.userDTOList").isArray())
+                .andExpect(jsonPath("$._embedded.userDTOList.length()").value(2));
     }
 
     @Test
