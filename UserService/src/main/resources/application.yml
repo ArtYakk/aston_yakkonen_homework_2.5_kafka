@@ -1,7 +1,12 @@
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
 spring:
   application:
-    name: KafkaSpringBootTemplate
-
+    name: UserService
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres
