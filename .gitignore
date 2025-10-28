@@ -10,3 +10,4 @@
 /volumes/new_postgres_data/
 /config-service/target/
 /discovery-service/target/
+/gateway-service/target/
