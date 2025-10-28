@@ -5,5 +5,8 @@
 /volumes/server-3/
 /volumes/postgres_data/
 /core/target/
-/EmailNotificationMicroservice/target/
-/UserService/target/
+/email-notification-service/target/
+/user-service/target/
+/volumes/new_postgres_data/
+/config-service/target/
+/discovery-service/target/

@@ -1,0 +1,26 @@
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka/
+
+spring:
+  application:
+    name: email-notification-service
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092,localhost:9094
+#      group-id: user-events
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "com.artemyakkonen.core"
+
+server:
+  port: 8090
+
+logging:
+  level:
+    root: info
+#    org.springframework.kafka: DEBUG
+#    com.artemyakkonen: debug

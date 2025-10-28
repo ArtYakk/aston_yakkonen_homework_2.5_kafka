@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./volumes/postgres_data:/var/lib/postgresql/data
+      - ./volumes/new_postgres_data:/var/lib/postgresql/data
 
   kafka-1:
     image: apache/kafka:4.0.1
