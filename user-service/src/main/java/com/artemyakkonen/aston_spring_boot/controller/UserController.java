@@ -149,7 +149,7 @@ public class UserController {
         return userDTOModelAssembler.toModel(userDTO);
     }
 
-    @GetMapping("/checkemail")
+    @PostMapping("/checkemail")
     public ResponseEntity<String> checkEmail(@RequestBody String email) {
         userService.existsByEmailOrThrowException(email);
         return ResponseEntity.ok(email);
