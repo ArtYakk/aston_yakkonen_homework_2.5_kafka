@@ -2,9 +2,7 @@ spring:
   application:
     name: email-notification-service
   config:
-    import: optional:configserver:http://localhost:8888
-#  profiles:
-#    active: dev
+    import: optional:configserver:http://config-service:8888
 management:
   endpoints:
     web:
