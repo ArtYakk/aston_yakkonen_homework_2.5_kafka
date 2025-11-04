@@ -9,3 +9,9 @@ spring:
         git:
           uri: https://github.com/ArtYakk/config-repo-aston
           clone-on-start: true
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
